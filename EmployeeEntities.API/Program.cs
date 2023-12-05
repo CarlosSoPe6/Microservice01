@@ -5,6 +5,7 @@ using EmployeeEntities.Data.Mappers;
 using EmployeeEntities.Models.Domain;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -33,6 +34,13 @@ builder.Services.AddAutoMapper(cfg =>
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetRequiredSection("EmployeeEntities:DatabaseSettings"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddStackExchangeRedisCache((config) =>
+{
+    var cacheSettings = builder.Configuration.GetRequiredSection("EmployeeEntities:CacheSettings");
+    var connectionString = cacheSettings.GetValue<string>("ConnectionString");
+
+    config.Configuration = connectionString;
+});
 builder.Services.AddTransient<IDataStoreClient<Employee>>((provider) =>
 {
     var databseSettings = provider.GetRequiredService<IOptions<DatabaseSettings>>().Value;

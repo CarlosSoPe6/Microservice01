@@ -18,15 +18,15 @@ public class DataStoreClient<TEntity> : IDataStoreClient<TEntity> where TEntity 
         try
         {
             var item = await action();
-            return new Result<TEntity>(item.StatusCode, item.Resource, null);
+            return new Result<TEntity>(item.StatusCode, true, item.Resource, null);
         }
         catch (CosmosException ex)
         {
-            return new Result<TEntity>(ex.StatusCode, null, ex.Message);
+            return new Result<TEntity>(ex.StatusCode, false, null, ex.Message);
         }
         catch (Exception ex)
         {
-            return new Result<TEntity>(HttpStatusCode.InternalServerError, null, ex.Message);
+            return new Result<TEntity>(HttpStatusCode.InternalServerError, false, null, ex.Message);
         }
     }
 
