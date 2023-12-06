@@ -39,7 +39,7 @@ public class EmployeeController : ControllerBase
             StatusCode((int)HttpStatusCode.OK, cahcedData);
         }
         var result = await _dataStore.GetBtId(id);
-        if (result.Success)
+        if (!result.Success)
         {
             return StatusCode((int)result.Status, result.ErrorMessage);
         }
@@ -53,7 +53,7 @@ public class EmployeeController : ControllerBase
         var domainEmployee = _mapper.Map<Employee>(employee);
         domainEmployee.id = new Guid().ToString();
         var result = await _dataStore.Create(domainEmployee);
-        if (result.Success)
+        if (!result.Success)
         {
             return StatusCode((int)result.Status, result.ErrorMessage);
         }
@@ -66,7 +66,7 @@ public class EmployeeController : ControllerBase
         var domainEmployee = _mapper.Map<Employee>(employee);
         domainEmployee.id = id;
         var result = await _dataStore.Update(domainEmployee);
-        if (result.Success)
+        if (!result.Success)
         {
             return StatusCode((int)result.Status, result.ErrorMessage);
         }
@@ -78,7 +78,7 @@ public class EmployeeController : ControllerBase
     public async Task<ActionResult> Delete(string id)
     {
         var result = await _dataStore.DeleteById(id);
-        if (result.Success)
+        if (!result.Success)
         {
             return StatusCode((int)result.Status, result.ErrorMessage);
         }
